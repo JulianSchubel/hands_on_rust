@@ -23,22 +23,47 @@ impl State {
     }
 
     fn main_menu(& mut self, ctx: & mut BTerm) -> () {
-        /* Clear the context */
         self.mode = GameMode::Menu;
+        /* Clear the context */
+        ctx.cls();
+        ctx.print_centered(5, "Welcome to Flappy Dragon");
+        ctx.print_centered(7, "(P) Play Game");
+        ctx.print_centered(9, "(Q) Quit Game");
+        /* Get keyboard input */
+        if let Some(key) = ctx.key {
+            match key {
+                VirtualKeyCode::P => self.restart(),
+                VirtualKeyCode::Q => ctx.quitting = true,
+                _ => ()
+            }
+        }
     }
 
     fn dead(& mut self, ctx: & mut BTerm) -> () {
         //TODO implement
         self.mode = GameMode::End;
+        /* Clear the context */
+        ctx.cls();
+        ctx.print_centered(5, "You are dead!");
+        ctx.print_centered(7, "(P) Play Again");
+        ctx.print_centered(9, "(Q) Quit Game");
+        /* Get keyboard input */
+        if let Some(key) = ctx.key {
+            match key {
+                VirtualKeyCode::P => self.restart(),
+                VirtualKeyCode::Q => ctx.quitting = true,
+                _ => ()
+            }
+        }
     }
 
     fn play(& mut self, ctx: & mut BTerm) -> () {
         //TODO implement
-        self.mode = GameMode::Playing;
+        self.mode = GameMode::End;
     }
 
     /* Ready game for playin; purging game state */
-    fn restart(& mut self, ctx: & mut BTerm) -> () {
+    fn restart(& mut self) -> () {
         self.mode = GameMode::Playing;
     }
 }
@@ -51,8 +76,8 @@ impl GameState for State {
        /* check game mode */
        match self.mode {
             GameMode::Menu => self.main_menu(ctx),
-            GameMode::Playing => self.dead(ctx),
-            GameMode::End => self.play(ctx),
+            GameMode::Playing => self.play(ctx),
+            GameMode::End => self.dead(ctx),
        }
    }
 }
