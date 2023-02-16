@@ -78,13 +78,14 @@ impl State {
         }
         /* render the player to the screen */
         self.player.render(ctx);
+        ctx.print(0,0, "Press SPACE to flap.");
         /* check if player has fallen off bottom of screen, i.e. hit the ground */
         if self.player.y > SCREEN_HEIGHT {
             self.mode = GameMode::End;
         }
     }
 
-    /* Ready game for playin; purging game state */
+    /* Ready game for playing; purging game state */
     pub fn restart(&mut self)  {
         /* reset the player */
         self.player = Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE);
