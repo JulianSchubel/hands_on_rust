@@ -1,8 +1,20 @@
 use bracket_lib::prelude::*;
+
+use crate::SCREEN_HEIGHT;
 use crate::game_modes::GameMode;
+use crate::player::Player;
+
+/* frame duration determines how often to perform a physics simulation */
+const FRAME_DURATION: f32 = 75.0; 
+const INIT_WORLD_SPACE: i32 = 5;
+const INIT_SCREEN_SPACE: i32 = 25;
 
 /* game state structure */
 pub struct State {
+    /* player instance in the game state */
+    player: Player,
+    /* tracks the time accumulated between frames in ms to control the game's speed */
+    frame_time: f32,
     mode: GameMode,
 }
 
@@ -11,6 +23,8 @@ impl State {
     /* constructor */
     pub fn new() -> State {
         State {
+            player: Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE),
+            frame_time: FRAME_DURATION,
             mode: GameMode::Menu,
         }
     }
@@ -50,12 +64,34 @@ impl State {
     }
 
     pub fn play(&mut self, ctx: &mut BTerm)  {
-        //TODO implement
+        /* set context background colour */
+        ctx.cls_bg(NAVY);
+        /* tick() runs as fast as possible, slow game speed down */
+        self.frame_time += ctx.frame_time_ms;
+        if self.frame_time > FRAME_DURATION {
+            self.frame_time = 0.0;
+            self.player.gravity_and_move();
+        }
+        /* flap on spacebar */
+        /* do not restrict by frame time as keyboard will be unresponsive during "wait" frames */
+        if let Some(VirtualKeyCode::Space) = ctx.key {
+            self.player.flap();
+        }
+        /* render the player to the screen */
+        self.player.render(ctx);
+        /* check if player has fallen off bottom of screen, i.e. hit the ground */
+        if self.player.y > SCREEN_HEIGHT {
+            self.mode = GameMode::End;
+        }
         self.mode = GameMode::End;
     }
 
     /* Ready game for playin; purging game state */
     pub fn restart(&mut self)  {
+        /* reset the player */
+        self.player = Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE);
+        /* reset the frame time */
+        self.frame_time = 0.0;
         self.mode = GameMode::Playing;
     }
 }

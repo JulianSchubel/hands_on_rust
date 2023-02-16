@@ -3,9 +3,9 @@ use bracket_lib::prelude::*;
 /* player attributes */
 pub struct Player {
     /* world-space */
-    x: i32,
+    pub x: i32,
     /* screen-space */
-    y: i32,
+    pub y: i32,
     /* vertical momentum: represents gravity */
     velocity: f32,
     terminal_velocity: f32,
