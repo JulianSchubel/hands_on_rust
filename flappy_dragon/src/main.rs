@@ -13,6 +13,7 @@ struct Player {
     terminal_velocity: f32,
     gravity_modifier: f32,
     world_space_velocity: i32,
+    flap_velocity: f32,
 }
 
 impl Player {
@@ -25,6 +26,7 @@ impl Player {
             terminal_velocity: 2.0,
             gravity_modifier: 0.2,
             world_space_velocity: 1,
+            flap_velocity: -2.0,
         }
     }
 
@@ -54,6 +56,10 @@ impl Player {
             self.y = 0;
         }
     }
+
+    fn flap(& mut self) {
+        self.velocity = self.flap_velocity;
+    }
 }
 
 /* available game modes */
@@ -77,7 +83,7 @@ impl State {
         }
     }
 
-    fn main_menu(&mut self, ctx: &mut BTerm) -> () {
+    fn main_menu(&mut self, ctx: &mut BTerm)  {
         self.mode = GameMode::Menu;
         ctx.cls();
         ctx.print_centered(5, "Welcome to Flappy Dragon");
@@ -93,7 +99,7 @@ impl State {
         }
     }
 
-    fn dead(&mut self, ctx: &mut BTerm) -> () {
+    fn dead(&mut self, ctx: &mut BTerm)  {
         //TODO implement
         self.mode = GameMode::End;
         /* Clear the context */
@@ -111,13 +117,13 @@ impl State {
         }
     }
 
-    fn play(&mut self, ctx: &mut BTerm) -> () {
+    fn play(&mut self, ctx: &mut BTerm)  {
         //TODO implement
         self.mode = GameMode::End;
     }
 
     /* Ready game for playin; purging game state */
-    fn restart(&mut self) -> () {
+    fn restart(&mut self)  {
         self.mode = GameMode::Playing;
     }
 }
