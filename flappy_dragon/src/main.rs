@@ -2,11 +2,17 @@
 
 use bracket_lib::prelude::*;
 
-/* player */
+/* player attributes */
 struct Player {
+    /* world-space */
     x: i32,
+    /* screen-space */
     y: i32,
+    /* vertical momentum: represents gravity */
     velocity: f32,
+    terminal_velocity: f32,
+    gravity_modifier: f32,
+    world_space_velocity: i32,
 }
 
 impl Player {
@@ -16,6 +22,9 @@ impl Player {
             x,
             y,
             velocity: 0.0,
+            terminal_velocity: 2.0,
+            gravity_modifier: 0.2,
+            world_space_velocity: 1,
         }
     }
 
@@ -32,9 +41,22 @@ impl Player {
             to_cp437('@')
         );
     }
+
+    fn gravity_and_move(& mut self) {
+        /* check for terminal velocity */
+        if self.velocity < self.terminal_velocity {
+            self.velocity += self.gravity_modifier;
+        }
+        self.y += self.velocity as i32;
+        self.x += self.world_space_velocity;
+        /* cannot leave upper screen boundary */
+        if self.y < 0 {
+            self.y = 0;
+        }
+    }
 }
 
-/* game modes */
+/* available game modes */
 enum GameMode {
     Menu,
     Playing,
@@ -57,7 +79,6 @@ impl State {
 
     fn main_menu(&mut self, ctx: &mut BTerm) -> () {
         self.mode = GameMode::Menu;
-        /* Clear the context */
         ctx.cls();
         ctx.print_centered(5, "Welcome to Flappy Dragon");
         ctx.print_centered(7, "(P) Play Game");
@@ -101,11 +122,10 @@ impl State {
     }
 }
 
-/* implement the GameState trait for State */
 /* GameState requires that the object implement a tick() function */
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        /* check game mode */
+        /* check game mode to determine tick() behaviour */
         match self.mode {
             GameMode::Menu => self.main_menu(ctx),
             GameMode::Playing => self.play(ctx),
