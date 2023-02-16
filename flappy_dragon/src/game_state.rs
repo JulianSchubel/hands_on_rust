@@ -24,7 +24,7 @@ impl State {
     pub fn new() -> State {
         State {
             player: Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE),
-            frame_time: FRAME_DURATION,
+            frame_time: 0.0,
             mode: GameMode::Menu,
         }
     }
@@ -46,7 +46,6 @@ impl State {
     }
 
     pub fn dead(&mut self, ctx: &mut BTerm)  {
-        //TODO implement
         self.mode = GameMode::End;
         /* Clear the context */
         ctx.cls();
@@ -83,7 +82,6 @@ impl State {
         if self.player.y > SCREEN_HEIGHT {
             self.mode = GameMode::End;
         }
-        self.mode = GameMode::End;
     }
 
     /* Ready game for playin; purging game state */
