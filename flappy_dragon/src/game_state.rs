@@ -85,7 +85,7 @@ impl State {
         ctx.print(0,0, "Press SPACE to flap.");
         ctx.print(0,1, &format!("Score: {}", self.score));
         /* render a new obstacle */
-        self.obstacle.render(& mut ctx, self.player.x);
+        self.obstacle.render(ctx, self.player.x);
         if self.player.x > self.obstacle.x {
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
