@@ -16,3 +16,4 @@ const FLAP_VELOCITY: f32 = -2.0;
 pub mod game_modes;
 pub mod game_state;
 pub mod player;
+pub mod obstacle;

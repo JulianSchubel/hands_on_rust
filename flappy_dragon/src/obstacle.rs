@@ -1,4 +1,8 @@
-struct Obstacle {
+use bracket_lib::prelude::*;
+
+use crate::player::Player;
+ 
+pub struct Obstacle {
     /* world space position */
     x: i32,
     /* gap center */
@@ -8,7 +12,7 @@ struct Obstacle {
 }
 
 impl Obstacle {
-    fn new(x: i32, score: i32) -> Self {
+    pub fn new(x: i32, score: i32) -> Self {
         let mut random = RandomNumberGenerator::new();
         Obstacle {
             /* current player x world-space + SCREEN_WIDTH */
@@ -20,7 +24,7 @@ impl Obstacle {
         }
     }
 
-    fn render(& mut self, ctx: & mut BTerm, player_x: i32) {
+    pub fn render(& mut self, ctx: & mut BTerm, player_x: i32) {
         /* convert obstacle x world-space to x screen-space */
         let screen_x = self.x - player_x;
         let half_gap_size = self.size / 2;
@@ -49,7 +53,7 @@ impl Obstacle {
     }
 
     /* determine whether the player collided with the obstacle */
-    fn collision(& self, player: & Player) -> bool {
+    pub fn collision(& self, player: & Player) -> bool {
         let half_gap_size = self.size / 2;
         let does_x_match = player.x == self.x;
         let player_above_gap = player.y < self.gap_y - half_gap_size;

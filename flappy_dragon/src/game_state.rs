@@ -3,14 +3,17 @@ use bracket_lib::prelude::*;
 use crate::{ SCREEN_HEIGHT, SCREEN_WIDTH, INIT_WORLD_SPACE, INIT_SCREEN_SPACE, FRAME_DURATION };
 use crate::game_modes::GameMode;
 use crate::player::Player;
+use crate::obstacle::Obstacle;
 
 /* game state structure */
 pub struct State {
+    mode: GameMode,
     /* player instance in the game state */
     player: Player,
     /* tracks the time accumulated between frames in ms to control the game's speed */
     frame_time: f32,
-    mode: GameMode,
+    obstacle: Obstacle,
+    score: i32
 }
 
 /* State associated functions */
@@ -18,9 +21,11 @@ impl State {
     /* constructor */
     pub fn new() -> State {
         State {
+            mode: GameMode::Menu,
             player: Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE),
             frame_time: 0.0,
-            mode: GameMode::Menu,
+            obstacle: Obstacle::new(SCREEN_WIDTH, 0),
+            score: 0
         }
     }
 
