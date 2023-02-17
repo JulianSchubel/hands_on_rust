@@ -1,13 +1,8 @@
 use bracket_lib::prelude::*;
 
-use crate::SCREEN_HEIGHT;
+use crate::{ SCREEN_HEIGHT, SCREEN_WIDTH, INIT_WORLD_SPACE, INIT_SCREEN_SPACE, FRAME_DURATION };
 use crate::game_modes::GameMode;
 use crate::player::Player;
-
-/* From duration dictates how often the game state is updated in ms */
-const FRAME_DURATION: f32 = 60.0; 
-const INIT_WORLD_SPACE: i32 = 5;
-const INIT_SCREEN_SPACE: i32 = 25;
 
 /* game state structure */
 pub struct State {
@@ -67,7 +62,7 @@ impl State {
         ctx.cls_bg(NAVY);
         /* tick() runs as fast as possible, slow game speed down by only updating after
          * FRAME_DURATION has elapsed */
-        /* accumulate the time since the last frame / tick iteration */
+        /* accumulate the time since the last tick function: ctx.frame_time_ms is the tme since the last tick() function in ms */
         self.frame_time += ctx.frame_time_ms;
         if self.frame_time >= FRAME_DURATION {
             self.frame_time = 0.0;

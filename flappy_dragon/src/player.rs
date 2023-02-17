@@ -1,5 +1,7 @@
 use bracket_lib::prelude::*;
 
+use crate::{ INIT_WORLD_SPACE, VELOCITY, TERMINAL_VELOCITY, GRAVITY_MODIFIER, WORLD_SPACE_VELOCITY, FLAP_VELOCITY };
+
 /* player attributes */
 pub struct Player {
     /* world-space */
@@ -20,11 +22,11 @@ impl Player {
         Player {
             x,
             y,
-            velocity: 0.0,
-            terminal_velocity: 2.0,
-            gravity_modifier: 0.45,
-            world_space_velocity: 1,
-            flap_velocity: -2.0,
+            velocity: VELOCITY,
+            terminal_velocity: TERMINAL_VELOCITY,
+            gravity_modifier: GRAVITY_MODIFIER,
+            world_space_velocity: WORLD_SPACE_VELOCITY,
+            flap_velocity: FLAP_VELOCITY,
         }
     }
 
@@ -33,7 +35,7 @@ impl Player {
         /* Set a single character on the screen */
         /* Can use RGB::from_u8() or RGB::from_hex() to indicate colours */
         ctx.set(
-            self.x,
+            INIT_WORLD_SPACE,
             self.y,
             YELLOW,
             BLACK,
