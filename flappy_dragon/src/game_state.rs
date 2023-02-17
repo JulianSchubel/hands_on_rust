@@ -4,8 +4,8 @@ use crate::SCREEN_HEIGHT;
 use crate::game_modes::GameMode;
 use crate::player::Player;
 
-/* frame duration determines how often to perform a physics simulation */
-const FRAME_DURATION: f32 = 75.0; 
+/* From duration dictates how often the game state is updated in ms */
+const FRAME_DURATION: f32 = 60.0; 
 const INIT_WORLD_SPACE: i32 = 5;
 const INIT_SCREEN_SPACE: i32 = 25;
 
@@ -65,10 +65,13 @@ impl State {
     pub fn play(&mut self, ctx: &mut BTerm)  {
         /* set context background colour */
         ctx.cls_bg(NAVY);
-        /* tick() runs as fast as possible, slow game speed down */
+        /* tick() runs as fast as possible, slow game speed down by only updating after
+         * FRAME_DURATION has elapsed */
+        /* accumulate the time since the last frame / tick iteration */
         self.frame_time += ctx.frame_time_ms;
-        if self.frame_time > FRAME_DURATION {
+        if self.frame_time >= FRAME_DURATION {
             self.frame_time = 0.0;
+            /* update the game state */
             self.player.gravity_and_move();
         }
         /* flap on spacebar */
@@ -97,6 +100,7 @@ impl State {
 
 /* GameState requires that the object implement a tick() function */
 impl GameState for State {
+    /* represents a single frame or execution of the game loop */
     fn tick(&mut self, ctx: &mut BTerm) {
         /* check game mode to determine tick() behaviour */
         match self.mode {

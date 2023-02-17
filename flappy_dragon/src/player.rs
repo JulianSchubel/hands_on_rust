@@ -7,7 +7,7 @@ pub struct Player {
     /* screen-space */
     pub y: i32,
     /* vertical momentum: represents gravity */
-    velocity: f32,
+    pub velocity: f32,
     terminal_velocity: f32,
     gravity_modifier: f32,
     world_space_velocity: i32,
@@ -22,7 +22,7 @@ impl Player {
             y,
             velocity: 0.0,
             terminal_velocity: 2.0,
-            gravity_modifier: 0.2,
+            gravity_modifier: 0.45,
             world_space_velocity: 1,
             flap_velocity: -2.0,
         }
@@ -33,7 +33,7 @@ impl Player {
         /* Set a single character on the screen */
         /* Can use RGB::from_u8() or RGB::from_hex() to indicate colours */
         ctx.set(
-            0,
+            self.x,
             self.y,
             YELLOW,
             BLACK,
