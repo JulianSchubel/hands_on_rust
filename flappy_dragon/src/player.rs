@@ -6,7 +6,6 @@ use crate::{ INIT_WORLD_SPACE, VELOCITY, TERMINAL_VELOCITY, GRAVITY_MODIFIER, WO
 pub struct Player {
     /* world-space */
     pub x: i32,
-    /* screen-space */
     pub y: i32,
     /* vertical momentum: represents gravity */
     pub velocity: f32,
@@ -35,7 +34,9 @@ impl Player {
         /* Set a single character on the screen */
         /* Can use RGB::from_u8() or RGB::from_hex() to indicate colours */
         ctx.set(
+            /* player has constant x screen-space */
             INIT_WORLD_SPACE,
+            /* y screen-space */
             self.y,
             YELLOW,
             BLACK,
