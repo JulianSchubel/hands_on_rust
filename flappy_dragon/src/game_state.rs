@@ -86,7 +86,10 @@ impl State {
         ctx.print(0,1, &format!("Score: {}", self.score));
         /* render a new obstacle */
         self.obstacle.render(ctx, self.player.x);
+        /* player has passed the obstacle */
         if self.player.x > self.obstacle.x {
+            self.score += 1;
+            /* update the obstacle */
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
         /* check if player has fallen off bottom of screen, i.e. hit the ground */

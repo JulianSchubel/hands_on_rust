@@ -1,6 +1,6 @@
 use bracket_lib::prelude::*;
 
-use crate::player::Player;
+use crate::{player::Player, SCREEN_HEIGHT};
  
 pub struct Obstacle {
     /* world space position */
@@ -41,7 +41,7 @@ impl Obstacle {
         }
 
         /* draw bottom half of the obstacle */
-        for y in 0..self.gap_y + half_gap_size {
+        for y in self.gap_y + half_gap_size..SCREEN_HEIGHT {
             ctx.set(
                 screen_x,
                 y,
