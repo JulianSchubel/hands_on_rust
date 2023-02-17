@@ -4,7 +4,7 @@ use crate::player::Player;
  
 pub struct Obstacle {
     /* world space position */
-    x: i32,
+    pub x: i32,
     /* gap center */
     gap_y: i32,
     /* size of the gap */

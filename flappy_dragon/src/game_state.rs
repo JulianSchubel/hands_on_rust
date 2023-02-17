@@ -50,6 +50,7 @@ impl State {
         /* Clear the context */
         ctx.cls();
         ctx.print_centered(5, "You are dead!");
+        ctx.print_centered(6, &format!("Your score was: {}", self.score));
         ctx.print_centered(7, "(P) Play Again");
         ctx.print_centered(9, "(Q) Quit Game");
         /* Get keyboard input */
@@ -82,8 +83,14 @@ impl State {
         /* render the player to the screen */
         self.player.render(ctx);
         ctx.print(0,0, "Press SPACE to flap.");
+        ctx.print(0,1, &format!("Score: {}", self.score));
+        /* render a new obstacle */
+        self.obstacle.render(& mut ctx, self.player.x);
+        if self.player.x > self.obstacle.x {
+            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
+        }
         /* check if player has fallen off bottom of screen, i.e. hit the ground */
-        if self.player.y > SCREEN_HEIGHT {
+        if self.player.y > SCREEN_HEIGHT || self.obstacle.collision(& self.player) {
             self.mode = GameMode::End;
         }
     }
@@ -94,6 +101,10 @@ impl State {
         self.player = Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE);
         /* reset the frame time */
         self.frame_time = 0.0;
+        /* reset the obstacle */
+        self.obstacle = Obstacle::new(SCREEN_WIDTH, 0);
+        /* reset score */
+        self.score = 0;
         self.mode = GameMode::Playing;
     }
 }
