@@ -1,4 +1,7 @@
 use bracket_lib::prelude::*;
+use std::fs::File;
+use std::io::BufReader;
+use rodio::{ Decoder, Sink };
 
 use crate::{ SCREEN_HEIGHT, SCREEN_WIDTH, INIT_WORLD_SPACE, INIT_SCREEN_SPACE, FRAME_DURATION };
 use crate::game_modes::GameMode;
@@ -13,32 +16,41 @@ pub struct State {
     /* tracks the time accumulated between frames in ms to control the game's speed */
     frame_time: f32,
     obstacle: Obstacle,
-    score: i32
+    score: i32,
+    audio_sink: Sink
 }
 
 /* State associated functions */
 impl State {
     /* constructor */
-    pub fn new() -> State {
+    pub fn new(audio_sink: Sink) -> State {
         State {
             mode: GameMode::Menu,
             player: Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE),
             frame_time: 0.0,
             obstacle: Obstacle::new(SCREEN_WIDTH, 0),
-            score: 0
+            score: 0,
+            audio_sink
         }
     }
 
     pub fn main_menu(&mut self, ctx: &mut BTerm)  {
         self.mode = GameMode::Menu;
+        /* start main menu music */
+        let file = BufReader::new(File::open("./resources/audio/tri-tachyon-riverline.mp3").unwrap());
+        let source = Decoder::new(file).unwrap(); 
+        self.audio_sink.append(source);
         ctx.cls();
         ctx.print_centered(5, "Welcome to Flappy Dragon");
-        ctx.print_centered(7, "(P) Play Game");
-        ctx.print_centered(9, "(Q) Quit Game");
+        ctx.print_color_centered(7, LIGHT_BLUE, BLACK, "(P) Play Game");
+        ctx.print_color_centered(9, LIGHT_BLUE, BLACK, "(Q) Quit Game");
         /* Get keyboard input */
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(),
+                VirtualKeyCode::P => {
+                    self.audio_sink.stop();
+                    self.restart();
+                },
                 VirtualKeyCode::Q => ctx.quitting = true,
                 _ => (),
             }
@@ -47,16 +59,27 @@ impl State {
 
     pub fn dead(&mut self, ctx: &mut BTerm)  {
         self.mode = GameMode::End;
-        /* Clear the context */
+        /* clear the context */
+        ctx.set_active_console(1);
         ctx.cls();
-        ctx.print_centered(5, "You are dead!");
-        ctx.print_centered(6, &format!("Your score was: {}", self.score));
-        ctx.print_centered(7, "(P) Play Again");
-        ctx.print_centered(9, "(Q) Quit Game");
+        ctx.set_active_console(0);
+        ctx.cls();
+        /* change to game over menu music */
+        let file = BufReader::new(File::open("./resources/audio/game-over-repeating-dream.wav").unwrap());
+        let source = Decoder::new(file).unwrap(); 
+        self.audio_sink.append(source);
+        /* output game over menu text */
+        ctx.print_color_centered(5, RED, BLACK, "You are dead!");
+        ctx.print_centered(7, &format!("Your score was {}", self.score));
+        ctx.print_color_centered(9, LIGHT_BLUE, BLACK, "(P) Play Again");
+        ctx.print_color_centered(11, LIGHT_BLUE, BLACK, "(Q) Quit Game");
         /* Get keyboard input */
         if let Some(key) = ctx.key {
             match key {
-                VirtualKeyCode::P => self.restart(),
+                VirtualKeyCode::P => {
+                    self.audio_sink.stop();
+                    self.restart();
+                },
                 VirtualKeyCode::Q => ctx.quitting = true,
                 _ => (),
             }
@@ -64,8 +87,14 @@ impl State {
     }
 
     pub fn play(&mut self, ctx: &mut BTerm)  {
+        /* start game music */
+        if self.audio_sink.empty() {
+            let file = BufReader::new(File::open("./resources/audio/summer_time_migfus20.mp3").unwrap());
+            let source = Decoder::new(file).unwrap(); 
+            self.audio_sink.append(source);
+        }
         /* set context background colour */
-        ctx.cls_bg(NAVY);
+        ctx.cls_bg(LIGHT_SKY);
         /* tick() runs as fast as possible, slow game speed down by only updating after
          * FRAME_DURATION has elapsed */
         /* accumulate the time since the last tick function: ctx.frame_time_ms is the tme since the last tick() function in ms */
@@ -93,7 +122,8 @@ impl State {
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
         /* check if player has fallen off bottom of screen, i.e. hit the ground */
-        if self.player.y > SCREEN_HEIGHT || self.obstacle.collision(& self.player) {
+        if self.player.y > SCREEN_HEIGHT as f32 || self.obstacle.collision(& self.player) {
+            self.audio_sink.stop();
             self.mode = GameMode::End;
         }
     }
@@ -101,7 +131,7 @@ impl State {
     /* Ready game for playing; purging game state */
     pub fn restart(&mut self)  {
         /* reset the player */
-        self.player = Player::new(INIT_WORLD_SPACE, INIT_SCREEN_SPACE);
+        self.player = Player::new(INIT_WORLD_SPACE, (SCREEN_HEIGHT / 2) as f32);
         /* reset the frame time */
         self.frame_time = 0.0;
         /* reset the obstacle */

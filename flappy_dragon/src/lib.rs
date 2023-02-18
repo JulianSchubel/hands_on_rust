@@ -1,18 +1,21 @@
-const SCREEN_WIDTH: i32 = 80;
-const SCREEN_HEIGHT: i32 = 50;
+pub const SCREEN_WIDTH: i32 = 40;
+pub const SCREEN_HEIGHT: i32 = 25;
 
 /* From duration dictates how often the game state is updated in ms */
-const FRAME_DURATION: f32 = 60.0; 
-const INIT_WORLD_SPACE: i32 = 5;
-const INIT_SCREEN_SPACE: i32 = 25;
+pub const FRAME_DURATION: f32 = 60.0; 
+pub const INIT_WORLD_SPACE: i32 = 5;
+pub const INIT_SCREEN_SPACE: f32 = 25.0;
 
 /* Player struct innit values */
-const VELOCITY: f32 = 0.0;
-const TERMINAL_VELOCITY: f32 = 2.0;
-const GRAVITY_MODIFIER: f32 = 0.45;
-const WORLD_SPACE_VELOCITY: i32 = 1;
-const FLAP_VELOCITY: f32 = -2.0;
+pub const VELOCITY: f32 = 0.0;
+pub const TERMINAL_VELOCITY: f32 = 2.0;
+pub const GRAVITY_MODIFIER: f32 = 0.1;
+pub const WORLD_SPACE_VELOCITY: i32 = 1;
+pub const FLAP_VELOCITY: f32 = -0.75;
 
+/* dragon frames for animation cycle */
+pub const DRAGON_FRAMES: [u16; 6] = [64, 1, 2, 3, 2, 1];
+ 
 pub mod game_modes;
 pub mod game_state;
 pub mod player;
