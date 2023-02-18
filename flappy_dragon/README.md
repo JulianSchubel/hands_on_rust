@@ -1,6 +1,6 @@
 # Flappy Dragon  
 
-![Alt Text](resources/flappy-dragon-sprite-sheets.gif.gif)
+![Alt Text](resources/flappy-dragon-sprite-sheets.gif)
 
 ## Attributions  
 
