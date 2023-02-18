@@ -69,7 +69,7 @@ impl State {
         let source = Decoder::new(file).unwrap(); 
         self.audio_sink.append(source);
         /* output game over menu text */
-        ctx.print_color_centered(5, RED, BLACK, "You are dead!");
+        ctx.print_color_centered(5, RED, BLACK, "Game Over!");
         ctx.print_centered(7, &format!("Your score was {}", self.score));
         ctx.print_color_centered(9, LIGHT_BLUE, BLACK, "(P) Play Again");
         ctx.print_color_centered(11, LIGHT_BLUE, BLACK, "(Q) Quit Game");
