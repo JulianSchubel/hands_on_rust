@@ -13,7 +13,7 @@ The hero's hometown is suffering from a plague of monsters. Welling up from the 
 
 1. Enter dungeon level.
 2. Explore, revealing the map.
-3. Envounter enemies whom the player fights or flees from.
+3. Encounter enemies whom the player fights or flees from.
 4. Find power-ups and use them to strengthen the player.
 5. Locate the exit to the level - go to 1.
 
