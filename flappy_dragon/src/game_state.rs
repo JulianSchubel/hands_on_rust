@@ -125,8 +125,7 @@ impl State {
             /* update the obstacle */
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
-        /* check if player has fallen off bottom of screen, i.e. hit the ground or collided with an
-         * obstacle */
+        /* check if player has fallen off bottom of screen or crossed an obstacle */
         if self.player.y > SCREEN_HEIGHT as f32 || self.obstacle.collision(& self.player) {
             self.audio_sink.stop();
             self.mode = GameMode::End;
