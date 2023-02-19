@@ -37,9 +37,11 @@ impl State {
     pub fn main_menu(&mut self, ctx: &mut BTerm)  {
         self.mode = GameMode::Menu;
         /* start main menu music */
-        let file = BufReader::new(File::open("./resources/audio/tri-tachyon-riverline.mp3").unwrap());
-        let source = Decoder::new(file).unwrap(); 
-        self.audio_sink.append(source);
+        if self.audio_sink.empty() {
+            let file = BufReader::new(File::open("./resources/audio/tri-tachyon-riverline.mp3").unwrap());
+            let source = Decoder::new(file).unwrap(); 
+            self.audio_sink.append(source);
+        };
         ctx.cls();
         ctx.print_centered(5, "Welcome to Flappy Dragon");
         ctx.print_color_centered(7, LIGHT_BLUE, BLACK, "(P) Play Game");
@@ -65,9 +67,11 @@ impl State {
         ctx.set_active_console(0);
         ctx.cls();
         /* change to game over menu music */
-        let file = BufReader::new(File::open("./resources/audio/game-over-repeating-dream.wav").unwrap());
-        let source = Decoder::new(file).unwrap(); 
-        self.audio_sink.append(source);
+        if self.audio_sink.empty() {
+            let file = BufReader::new(File::open("./resources/audio/game-over-repeating-dream.wav").unwrap());
+            let source = Decoder::new(file).unwrap(); 
+            self.audio_sink.append(source);
+        };
         /* output game over menu text */
         ctx.print_color_centered(5, RED, BLACK, "Game Over!");
         ctx.print_centered(7, &format!("Your score was {}", self.score));
@@ -121,14 +125,15 @@ impl State {
             /* update the obstacle */
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
-        /* check if player has fallen off bottom of screen, i.e. hit the ground */
+        /* check if player has fallen off bottom of screen, i.e. hit the ground or collided with an
+         * obstacle */
         if self.player.y > SCREEN_HEIGHT as f32 || self.obstacle.collision(& self.player) {
             self.audio_sink.stop();
             self.mode = GameMode::End;
         }
     }
 
-    /* Ready game for playing; purging game state */
+    /* Ready game for playing: update game state with Player and Obstacle instances */
     pub fn restart(&mut self)  {
         /* reset the player */
         self.player = Player::new(INIT_WORLD_SPACE, (SCREEN_HEIGHT / 2) as f32);
