@@ -9,6 +9,5 @@ fn main() -> BError {
         .with_title("Rusty Roguelike")
         .with_fps_cap(30.0)
         .build()?;
-    println!("Hello, world!");
     main_loop(context, State::new())
 }

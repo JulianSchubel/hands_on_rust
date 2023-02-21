@@ -1,4 +1,5 @@
 pub mod map;
+pub mod player;
 pub mod game_state;
 
 pub mod prelude {
@@ -7,4 +8,5 @@ pub mod prelude {
     pub const SCREEN_HEIGHT: i32 = 50;
     pub use crate::map::*;
     pub use crate::game_state::*;
+    pub use crate::player::*;
 }
