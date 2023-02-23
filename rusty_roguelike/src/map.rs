@@ -48,7 +48,7 @@ impl Map {
     }
 
     /* try_idx: checks whether a given point is in bounds if so returns Some(map_idx(x,y)), else returns None */
-    pub fn try_idx(& self, point: Point) -> Option<usize> {
+    pub fn try_index(& self, point: Point) -> Option<usize> {
         if !self.in_bounds(point) {
             return None
         } else {
