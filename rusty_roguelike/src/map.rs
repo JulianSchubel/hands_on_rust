@@ -55,6 +55,42 @@ impl Map {
             return Some(map_index(point.x, point.y))
         }
     }
+
+    /* render_viewport: uses camera boundaries to render only the visible part of the map */
+    pub fn render_viewport(& self, ctx: & mut BTerm, camera: & Camera) {
+        /* Render to the base map */
+        ctx.set_active_console(0);
+        for y in camera.top_y .. camera.bottom_y {
+            for x in camera.left_x .. camera.right_x {
+                /* For every x,y coordinate in the camera viewport check that it is in bounds */
+                if self.in_bounds(Point::new(x,y)) {
+                    /* fetch the tile type from the world space */
+                    let index = map_index(x, y);
+                    /* Set the tile relative to the camera viewport */
+                    match self.tiles[index] {
+                        TileType::Floor => {
+                            ctx.set(
+                                x - camera.left_x,
+                                y - camera.top_y,
+                                WHITE,
+                                BLACK,
+                                to_cp437('.')
+                            );
+                        }
+                        TileType::Wall => {
+                            ctx.set(
+                                x - camera.left_x,
+                                y - camera.top_y,
+                                WHITE,
+                                BLACK,
+                                to_cp437('#')
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
