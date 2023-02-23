@@ -100,7 +100,7 @@ impl MapBuilder {
         /* order rooms by the x coordinate of their central point */
         rooms.sort_by(|a, b| a.center().x.cmp(&b.center().x));
         
-        /* get points of central points of adjacent rooms and join them together with corriders */
+        /* get central points of adjacent rooms and join them together with corriders */
         /* sorting the rooms shortens the length of corridors between them */
         for (i, room) in rooms.iter().enumerate().skip(1) {
             /* why we skipped the first entry */
