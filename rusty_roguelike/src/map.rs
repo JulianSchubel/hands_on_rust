@@ -22,19 +22,7 @@ impl Map {
             tiles: vec![TileType::Floor; NUM_TILES]
         }
     }
-
-    pub fn render(& self, ctx: & mut BTerm) {
-        for y in 0..SCREEN_HEIGHT {
-            for x in 0..SCREEN_WIDTH {
-                let index = map_index(x, y);
-                match self.tiles[index] {
-                    TileType::Floor => ctx.set(x, y, GRAY, BLACK, to_cp437('.')),
-                    TileType::Wall => ctx.set(x, y, PURPLE, BLACK, to_cp437('#'))
-                }
-            }
-        }
-    }
-
+    
     /* in_bounds: checks whether a point is within screen boundaries */
     /* Point structure is stack allocated so no real cost to copy */
     pub fn in_bounds(& self, point: Point) -> bool {
@@ -56,7 +44,24 @@ impl Map {
         }
     }
 
+
+    /* OLD RENDER FUNCTIONS */
+    /*
+    pub fn render(& self, ctx: & mut BTerm) {
+        for y in 0..SCREEN_HEIGHT {
+            for x in 0..SCREEN_WIDTH {
+                let index = map_index(x, y);
+                match self.tiles[index] {
+                    TileType::Floor => ctx.set(x, y, GRAY, BLACK, to_cp437('.')),
+                    TileType::Wall => ctx.set(x, y, PURPLE, BLACK, to_cp437('#'))
+                }
+            }
+        }
+    }
+    */
+
     /* render_viewport: uses camera boundaries to render only the visible part of the map */
+    /*
     pub fn render_viewport(& self, ctx: & mut BTerm, camera: & Camera) {
         /* Render to the base map */
         ctx.set_active_console(0);
@@ -91,6 +96,7 @@ impl Map {
             }
         }
     }
+    */
 }
 
 
